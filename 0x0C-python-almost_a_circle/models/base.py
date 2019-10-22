@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import json
+import csv
 
 
 class Base:
@@ -64,3 +65,40 @@ class Base:
                 return new_list
         except:
             return new_list
+
+    @classmethod
+    def save_to_file_csv(cls, list_objs):
+        """serializes a list of Rectangles/Squares in csv"""
+        filename = cls.__name__ + ".csv"
+        with open(filename, 'w', newline='') as f:
+            fd = csv.writer(f)
+            if cls.__name__ is "Rectangle":
+                for obj in list_objs:
+                    fd.writerow([obj.id, obj.width, obj.height, obj.x, obj.y])
+            elif cls.__name__ is "Square":
+                for obj in list_objs:
+                    fd.writerow([obj.id, obj.size, obj.x, obj.y])
+
+    @classmethod
+    def load_from_file_csv(cls):
+        """deserializes a list of Rectangles/Squares in csv"""
+        filename = cls.__name__ + ".csv"
+        new_list = []
+        try:
+            with open(filename, 'r') as f:
+                fd = csv.reader(f)
+                for args in fd:
+                    if cls.__name__ is "Rectangle":
+                        dictionary = {"id": int(args[0]),
+                                      "width": int(args[1]),
+                                      "height": int(args[2]),
+                                      "x": int(args[3]),
+                                      "y": int(args[4])}
+                    elif cls.__name__ is "Square":
+                        dictionary = {"id": int(args[0]), "size": int(args[1]),
+                                      "x": int(args[2]), "y": int(args[3])}
+                    obj = cls.create(**dictionary)
+                    new_list.append(obj)
+        except:
+            pass
+        return new_list
