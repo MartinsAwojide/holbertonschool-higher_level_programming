@@ -1,4 +1,7 @@
 from models.rectangle import Rectangle
+"""
+Square class
+"""
 
 
 class Square(Rectangle):
